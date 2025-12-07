@@ -1,0 +1,330 @@
+openapi: 3.1.0
+info:
+  title: Snake Game API
+  version: 1.0.0
+  description: API for the Snake Game application with multiplayer features
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+  - url: https://api.snakegame.com
+    description: Production server
+
+paths:
+  /login:
+    post:
+      summary: User login
+      description: Authenticate a user and return a token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+
+  /users:
+    post:
+      summary: Create a new user
+      description: Register a new user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request
+        '409':
+          description: User already exists
+
+  /leaderboard:
+    get:
+      summary: Get leaderboard data
+      description: Retrieve the top players with their scores
+      responses:
+        '200':
+          description: Successful retrieval of leaderboard
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LeaderboardEntry'
+
+  /players:
+    get:
+      summary: Get list of players
+      description: Retrieve list of players with their current status
+      responses:
+        '200':
+          description: Successful retrieval of players
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Player'
+
+  /games:
+    post:
+      summary: Start a new game
+      description: Create a new game session for a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameStart'
+      responses:
+        '201':
+          description: Game started successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+
+  /games/{game_id}/score:
+    put:
+      summary: Update game score
+      description: Update the score for a specific game
+      parameters:
+        - name: game_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoreUpdate'
+      responses:
+        '200':
+          description: Score updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: Bad request
+        '404':
+          description: Game not found
+
+  /games/{game_id}/status:
+    put:
+      summary: Update game status
+      description: Update the status of a specific game
+      parameters:
+        - name: game_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameStatusUpdate'
+      responses:
+        '200':
+          description: Status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: Bad request
+        '404':
+          description: Game not found
+
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - username
+      properties:
+        username:
+          type: string
+          example: "player123"
+
+    LoginResponse:
+      type: object
+      required:
+        - username
+        - token
+      properties:
+        username:
+          type: string
+          example: "player123"
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
+    UserCreate:
+      type: object
+      required:
+        - username
+      properties:
+        username:
+          type: string
+          example: "player123"
+
+    User:
+      type: object
+      required:
+        - id
+        - username
+        - created_at
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "player123"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00Z"
+
+    LeaderboardEntry:
+      type: object
+      required:
+        - id
+        - username
+        - score
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "player123"
+        score:
+          type: integer
+          example: 1250
+
+    Player:
+      type: object
+      required:
+        - id
+        - username
+        - score
+        - status
+        - game_mode
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "player123"
+        score:
+          type: integer
+          example: 1250
+        status:
+          type: string
+          enum: [playing, idle, finished]
+          example: "playing"
+        game_mode:
+          type: string
+          enum: [pass-through, walls]
+          example: "pass-through"
+
+    GameStart:
+      type: object
+      required:
+        - user_id
+        - game_mode
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        game_mode:
+          type: string
+          enum: [pass-through, walls]
+          example: "pass-through"
+
+    ScoreUpdate:
+      type: object
+      required:
+        - score
+      properties:
+        score:
+          type: integer
+          example: 1250
+
+    GameStatusUpdate:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [playing, idle, finished]
+          example: "playing"
+
+    Game:
+      type: object
+      required:
+        - id
+        - user_id
+        - score
+        - game_mode
+        - status
+        - created_at
+      properties:
+        id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 1
+        score:
+          type: integer
+          example: 1250
+        game_mode:
+          type: string
+          enum: [pass-through, walls]
+          example: "pass-through"
+        status:
+          type: string
+          enum: [playing, idle, finished]
+          example: "playing"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00Z"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

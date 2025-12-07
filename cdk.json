@@ -1,0 +1,54 @@
+{
+  "app": "python3 app.py",
+  "watch": {
+    "include": [
+      "**"
+    ],
+    "exclude": [
+      "README.md",
+      "cdk*.json",
+      "requirements*.txt",
+      "backend/venv",
+      "backend/__pycache__",
+      "backend/*.pyc"
+    ]
+  },
+  "context": {
+    "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
+    "@aws-cdk/core:checkSecretUsage": true,
+    "@aws-cdk/core:target-partitions": [
+      "aws",
+      "aws-cn"
+    ],
+    "@aws-cdk/aws-s3:grantWriteWithoutAcl": true,
+    "@aws-cdk/aws-ecs:enableDefaultLogDriver": true,
+    "@aws-cdk/aws-ecs:arnFormat": true,
+    "@aws-cdk/aws-ecs:containerPort": true,
+    "@aws-cdk/aws-ecs:taskDefinition": true,
+    "@aws-cdk/aws-ecs:service": true,
+    "@aws-cdk/aws-ecs:cluster": true,
+    "@aws-cdk/aws-ecs:serviceDiscovery": true,
+    "@aws-cdk/aws-ecs:serviceLoadBalancer": true,
+    "@aws-cdk/aws-ecs:serviceAutoScaling": true,
+    "@aws-cdk/aws-ecs:serviceDeployment": true,
+    "@aws-cdk/aws-ecs:serviceHealthCheck": true,
+    "@aws-cdk/aws-ecs:serviceNetwork": true,
+    "@aws-cdk/aws-ecs:serviceSecurity": true,
+    "@aws-cdk/aws-ecs:serviceTask": true,
+    "@aws-cdk/aws-ecs:serviceTaskDefinition": true,
+    "@aws-cdk/aws-ecs:serviceTaskRole": true,
+    "@aws-cdk/aws-ecs:serviceTaskSecurity": true,
+    "@aws-cdk/aws-ecs:serviceTaskNetwork": true,
+    "@aws-cdk/aws-ecs:serviceTaskAutoScaling": true,
+    "@aws-cdk/aws-ecs:serviceTaskDeployment": true,
+    "@aws-cdk/aws-ecs:serviceTaskHealthCheck": true,
+    "@aws-cdk/aws-ecs:serviceTaskLoadBalancer": true,
+    "@aws-cdk/aws-ecs:serviceTaskService": true,
+    "@aws-cdk/aws-ecs:serviceTaskCluster": true,
+    "@aws-cdk/aws-ecs:serviceTaskDiscovery": true,
+    "@aws-cdk/aws-ecs:serviceTaskSecurityGroup": true,
+    "@aws-cdk/aws-ecs:serviceTaskSecurityGroupRule": true,
+    "@aws-cdk/aws-ecs:serviceTaskSecurityGroupIngress": true,
+    "@aws-cdk/aws-ecs:serviceTaskSecurityGroupEgress": true,
+    "@aws-cdk/aws-ecs:serviceTaskSecurityGroupVpc": true
+}
